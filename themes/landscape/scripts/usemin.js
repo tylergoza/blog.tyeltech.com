@@ -3,14 +3,10 @@ const path = require('path');
 const crypto = require('crypto');
 
 function filehash(filepath, digitlength) {
-  fs.stat(path.resolve(filepath), (error, status) => {
-    if (error || !status.isFile()) {
-      return filepath;
-    }
-    var hash = crypto.createHash('md5').update(fs.readFileSync(filepath)).digest('hex');
-    var prefix = hash.slice(0, digitlength);
-    return prefix + '.' + path.basename(filepath);
-  })
+  console.warn(filepath);
+  var hash = crypto.createHash('md5').update(fs.readFileSync(filepath)).digest('hex');
+  var prefix = hash.slice(0, digitlength);
+  return prefix + '.' + path.basename(filepath);
 }
 
 var themeSourcePath = path.resolve(__dirname, '../source'); // we need the theme source path to find the assets folder
@@ -21,7 +17,7 @@ hexo.extend.generator.register('filerev', function(locals) {
   var directories = fs.readdirSync(themeSourcePath);
   var outputData = [];
   directories.filter(function(dir){
-    return dir === 'css' || dir === 'js';
+    return dir === 'js';
   }).forEach(function(dir){
     var files = fs.readdirSync(path.join(themeSourcePath, dir));
     outputData = outputData.concat(files.map(function(file) {
